@@ -209,8 +209,8 @@ class RiskManager:
             stop_loss_pct = STOP_LOSS_PCT  # Default            # For RAYSOL tokens, add more buffer to the stop loss to account for higher volatility
             if is_raysol:
                 original_pct = stop_loss_pct
-                # Reduced multiplier from 2.3 to 1.8 to better align with take profit levels
-                stop_loss_pct = stop_loss_pct * 1.8
+                # Reduced multiplier from 1.8 to 1.4 to better align with take profit levels
+                stop_loss_pct = stop_loss_pct * 1.4
                 logger.info(f"RAYSOL token detected: Increasing stop loss percentage from {original_pct*100:.2f}% to {stop_loss_pct*100:.2f}%")
 
         if side == "BUY":  # Long position
@@ -658,20 +658,20 @@ class RiskManager:
             
             # Adjusted multipliers to better align with take profit levels
             if self.current_market_condition == 'EXTREME_BULLISH':
-                atr_multiplier = 3.2  # Reduced from 4.5 to 3.2
+                atr_multiplier = 2.1  # Reduced from 3.2 to 2.1
             elif self.current_market_condition == 'BULLISH':
-                atr_multiplier = 2.8  # Reduced from 4.0 to 2.8
+                atr_multiplier = 1.9  # Reduced from 2.8 to 1.9
             elif self.current_market_condition == 'EXTREME_BEARISH':
-                atr_multiplier = 2.5  # Reduced from 3.5 to 2.5
+                atr_multiplier = 1.7  # Reduced from 2.5 to 1.7
             elif self.current_market_condition == 'BEARISH':
-                atr_multiplier = 2.6  # Reduced from 3.8 to 2.6
+                atr_multiplier = 1.8  # Reduced from 2.6 to 1.8
             else:  # SIDEWAYS
-                atr_multiplier = 2.3  # Reduced from 3.2 to 2.3
+                atr_multiplier = 1.5  # Reduced from 2.3 to 1.5
 
             # Apply RAYSOL-specific adjustments
             if is_raysol:
                 original_multiplier = atr_multiplier
-                atr_multiplier = atr_multiplier * 1.5  # Reduced from 1.8 to 1.5 for better alignment with take profit
+                atr_multiplier = atr_multiplier * 1.2  # Reduced from 1.5 to 1.2 for better alignment with take profit
                 logger.info(f"RAYSOL token detected: Increasing ATR multiplier from {original_multiplier} to {atr_multiplier}")
 
             # Calculate stop loss price - use support/resistance levels if available
@@ -689,7 +689,7 @@ class RiskManager:
                         support_stop_price = nearest_support - (atr * 0.4)
                         
                         # Only use support-based stop if it provides enough distance from entry
-                        min_distance_pct = 0.022  # Reduced minimum distance from 2.8% to 2.2%
+                        min_distance_pct = 0.016  # Reduced minimum distance from 2.2% to 1.6%
                         min_stop_price = entry_price * (1 - min_distance_pct)
                         
                         if support_stop_price > min_stop_price:
@@ -708,15 +708,15 @@ class RiskManager:
                     
                 # Cap maximum stop distance to standard percentage stop loss * multiplier
                 # Adjusted to better align with take profit levels
-                max_stop_pct = STOP_LOSS_PCT * 1.1  # Reduced from 1.2 to 1.1
+                max_stop_pct = STOP_LOSS_PCT * 1.05  # Reduced from 1.1 to 1.05
                 if self.current_market_condition == 'EXTREME_BEARISH':
-                    max_stop_pct = STOP_LOSS_PCT * 1.0  # Reduced from 1.1 to 1.0
+                    max_stop_pct = STOP_LOSS_PCT * 0.95  # Reduced from 1.0 to 0.95
                 elif self.current_market_condition == 'BEARISH':
-                    max_stop_pct = STOP_LOSS_PCT * 1.05  # Reduced from 1.15 to 1.05
+                    max_stop_pct = STOP_LOSS_PCT * 1.0  # Reduced from 1.05 to 1.0
 
                 # For RAYSOL, adapt the maximum stop distance
                 if is_raysol:
-                    max_stop_pct = max_stop_pct * 1.4  # Reduced from 1.7 to 1.4
+                    max_stop_pct = max_stop_pct * 1.1  # Reduced from 1.4 to 1.1
                     
                 max_stop_distance = entry_price * max_stop_pct
                 min_stop_price = entry_price - max_stop_distance
@@ -738,7 +738,7 @@ class RiskManager:
                         resistance_stop_price = nearest_resistance + (atr * 0.4)
                         
                         # Only use resistance-based stop if it provides enough distance from entry
-                        min_distance_pct = 0.022  # Reduced minimum distance from 2.8% to 2.2%
+                        min_distance_pct = 0.016  # Reduced minimum distance from 2.2% to 1.6%
                         min_stop_price = entry_price * (1 + min_distance_pct)
                         
                         if resistance_stop_price < min_stop_price:
@@ -757,15 +757,15 @@ class RiskManager:
                 
                 # Cap maximum stop distance to standard percentage stop loss * multiplier
                 # Adjusted to better align with take profit levels
-                max_stop_pct = STOP_LOSS_PCT * 1.1  # Reduced from 1.2 to 1.1
+                max_stop_pct = STOP_LOSS_PCT * 1.05  # Reduced from 1.1 to 1.05
                 if self.current_market_condition == 'EXTREME_BULLISH':
-                    max_stop_pct = STOP_LOSS_PCT * 1.0  # Reduced from 1.1 to 1.0
+                    max_stop_pct = STOP_LOSS_PCT * 0.95  # Reduced from 1.0 to 0.95
                 elif self.current_market_condition == 'BULLISH':
-                    max_stop_pct = STOP_LOSS_PCT * 1.05  # Reduced from 1.15 to 1.05
+                    max_stop_pct = STOP_LOSS_PCT * 1.0  # Reduced from 1.05 to 1.0
 
                 # For RAYSOL, adapt the maximum stop distance
                 if is_raysol:
-                    max_stop_pct = max_stop_pct * 1.4  # Reduced from 1.7 to 1.4
+                    max_stop_pct = max_stop_pct * 1.1  # Reduced from 1.4 to 1.1
                     
                 max_stop_distance = entry_price * max_stop_pct
                 max_stop_price = entry_price + max_stop_distance
