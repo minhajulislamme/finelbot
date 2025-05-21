@@ -209,8 +209,8 @@ class RiskManager:
             stop_loss_pct = STOP_LOSS_PCT  # Default            # For RAYSOL tokens, add more buffer to the stop loss to account for higher volatility
             if is_raysol:
                 original_pct = stop_loss_pct
-                # Reduced multiplier from 1.8 to 1.4 to better align with take profit levels
-                stop_loss_pct = stop_loss_pct * 1.4
+                # Reduced multiplier from 1.4 to 1.1 to better align with take profit levels
+                stop_loss_pct = stop_loss_pct * 1.1
                 logger.info(f"RAYSOL token detected: Increasing stop loss percentage from {original_pct*100:.2f}% to {stop_loss_pct*100:.2f}%")
 
         if side == "BUY":  # Long position
@@ -658,20 +658,20 @@ class RiskManager:
             
             # Adjusted multipliers to better align with take profit levels
             if self.current_market_condition == 'EXTREME_BULLISH':
-                atr_multiplier = 2.1  # Reduced from 3.2 to 2.1
+                atr_multiplier = 1.5  # Reduced from 2.1 to 1.5
             elif self.current_market_condition == 'BULLISH':
-                atr_multiplier = 1.9  # Reduced from 2.8 to 1.9
+                atr_multiplier = 1.3  # Reduced from 1.9 to 1.3
             elif self.current_market_condition == 'EXTREME_BEARISH':
-                atr_multiplier = 1.7  # Reduced from 2.5 to 1.7
+                atr_multiplier = 1.2  # Reduced from 1.7 to 1.2
             elif self.current_market_condition == 'BEARISH':
-                atr_multiplier = 1.8  # Reduced from 2.6 to 1.8
+                atr_multiplier = 1.3  # Reduced from 1.8 to 1.3
             else:  # SIDEWAYS
-                atr_multiplier = 1.5  # Reduced from 2.3 to 1.5
+                atr_multiplier = 1.0  # Reduced from 1.5 to 1.0
 
             # Apply RAYSOL-specific adjustments
             if is_raysol:
                 original_multiplier = atr_multiplier
-                atr_multiplier = atr_multiplier * 1.2  # Reduced from 1.5 to 1.2 for better alignment with take profit
+                atr_multiplier = atr_multiplier * 1.1  # Reduced from 1.2 to 1.1 for tighter stop loss
                 logger.info(f"RAYSOL token detected: Increasing ATR multiplier from {original_multiplier} to {atr_multiplier}")
 
             # Calculate stop loss price - use support/resistance levels if available
@@ -685,11 +685,11 @@ class RiskManager:
                     support_distance = entry_price - nearest_support
                     # Increased the max distance to 2.5x ATR (from 1.5x) to consider stronger support levels
                     if support_distance <= atr_stop_distance * 2.5:
-                        # Place stop below support with a much larger buffer (40% of ATR)
-                        support_stop_price = nearest_support - (atr * 0.4)
+                        # Place stop below support with a smaller buffer (30% of ATR)
+                        support_stop_price = nearest_support - (atr * 0.3)
                         
                         # Only use support-based stop if it provides enough distance from entry
-                        min_distance_pct = 0.016  # Reduced minimum distance from 2.2% to 1.6%
+                        min_distance_pct = 0.010  # Reduced minimum distance from 0.016 to 0.01 (1.0%)
                         min_stop_price = entry_price * (1 - min_distance_pct)
                         
                         if support_stop_price > min_stop_price:
@@ -707,16 +707,16 @@ class RiskManager:
                     stop_price = atr_stop_price
                     
                 # Cap maximum stop distance to standard percentage stop loss * multiplier
-                # Adjusted to better align with take profit levels
-                max_stop_pct = STOP_LOSS_PCT * 1.05  # Reduced from 1.1 to 1.05
+                # Adjusted to better align with take profit levels - 1:4 ratio
+                max_stop_pct = STOP_LOSS_PCT * 1.0  # Reduced from 1.05 to 1.0
                 if self.current_market_condition == 'EXTREME_BEARISH':
-                    max_stop_pct = STOP_LOSS_PCT * 0.95  # Reduced from 1.0 to 0.95
+                    max_stop_pct = STOP_LOSS_PCT * 0.9  # Reduced from 0.95 to 0.9
                 elif self.current_market_condition == 'BEARISH':
-                    max_stop_pct = STOP_LOSS_PCT * 1.0  # Reduced from 1.05 to 1.0
+                    max_stop_pct = STOP_LOSS_PCT * 0.95  # Reduced from 1.0 to 0.95
 
                 # For RAYSOL, adapt the maximum stop distance
                 if is_raysol:
-                    max_stop_pct = max_stop_pct * 1.1  # Reduced from 1.4 to 1.1
+                    max_stop_pct = max_stop_pct * 1.05  # Reduced from 1.1 to 1.05
                     
                 max_stop_distance = entry_price * max_stop_pct
                 min_stop_price = entry_price - max_stop_distance
@@ -734,11 +734,11 @@ class RiskManager:
                     resistance_distance = nearest_resistance - entry_price
                     # Increased the max distance to 2.5x ATR (from 1.5x) to consider stronger resistance levels
                     if resistance_distance <= atr_stop_distance * 2.5:
-                        # Place stop above resistance with a much larger buffer (40% of ATR) 
-                        resistance_stop_price = nearest_resistance + (atr * 0.4)
+                        # Place stop above resistance with a smaller buffer (30% of ATR) 
+                        resistance_stop_price = nearest_resistance + (atr * 0.3)
                         
                         # Only use resistance-based stop if it provides enough distance from entry
-                        min_distance_pct = 0.016  # Reduced minimum distance from 2.2% to 1.6%
+                        min_distance_pct = 0.010  # Reduced minimum distance from 0.016 to 0.01 (1.0%)
                         min_stop_price = entry_price * (1 + min_distance_pct)
                         
                         if resistance_stop_price < min_stop_price:
@@ -756,16 +756,16 @@ class RiskManager:
                     stop_price = atr_stop_price
                 
                 # Cap maximum stop distance to standard percentage stop loss * multiplier
-                # Adjusted to better align with take profit levels
-                max_stop_pct = STOP_LOSS_PCT * 1.05  # Reduced from 1.1 to 1.05
+                # Adjusted to better align with take profit levels - 1:4 ratio
+                max_stop_pct = STOP_LOSS_PCT * 1.0  # Reduced from 1.05 to 1.0
                 if self.current_market_condition == 'EXTREME_BULLISH':
-                    max_stop_pct = STOP_LOSS_PCT * 0.95  # Reduced from 1.0 to 0.95
+                    max_stop_pct = STOP_LOSS_PCT * 0.9  # Reduced from 0.95 to 0.9
                 elif self.current_market_condition == 'BULLISH':
-                    max_stop_pct = STOP_LOSS_PCT * 1.0  # Reduced from 1.05 to 1.0
+                    max_stop_pct = STOP_LOSS_PCT * 0.95  # Reduced from 1.0 to 0.95
 
                 # For RAYSOL, adapt the maximum stop distance
                 if is_raysol:
-                    max_stop_pct = max_stop_pct * 1.1  # Reduced from 1.4 to 1.1
+                    max_stop_pct = max_stop_pct * 1.05  # Reduced from 1.1 to 1.05
                     
                 max_stop_distance = entry_price * max_stop_pct
                 max_stop_price = entry_price + max_stop_distance

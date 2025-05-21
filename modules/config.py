@@ -75,26 +75,26 @@ TIMEFRAME = os.getenv('TIMEFRAME', '15m')
 
 # Risk management - Standard settings
 USE_STOP_LOSS = os.getenv('USE_STOP_LOSS', 'True').lower() == 'true'
-STOP_LOSS_PCT = float(os.getenv('STOP_LOSS_PCT', '0.022'))  # Reduced from 0.035 (3.5%) to 0.022 (2.2%)
+STOP_LOSS_PCT = float(os.getenv('STOP_LOSS_PCT', '0.015'))  # Reduced from 0.022 to 0.015 (1.5%, 1:4 ratio)
 USE_TAKE_PROFIT = os.getenv('USE_TAKE_PROFIT', 'True').lower() == 'true'
 TAKE_PROFIT_PCT = float(os.getenv('TAKE_PROFIT_PCT', '0.06'))
 TRAILING_STOP = os.getenv('TRAILING_STOP', 'True').lower() == 'true'
-TRAILING_STOP_PCT = float(os.getenv('TRAILING_STOP_PCT', '0.018'))  # Reduced from 0.032 (3.2%) to 0.018 (1.8%)
+TRAILING_STOP_PCT = float(os.getenv('TRAILING_STOP_PCT', '0.0075'))  # Reduced from 0.018 to 0.0075 (0.75%, 1:4 ratio)
 TRAILING_TAKE_PROFIT = os.getenv('TRAILING_TAKE_PROFIT', 'True').lower() == 'true'
 TRAILING_TAKE_PROFIT_PCT = float(os.getenv('TRAILING_TAKE_PROFIT_PCT', '0.04'))  # Increased from 0.03 (3%) to 0.04 (4%)
 
 # Adaptive risk management settings for different market conditions
-STOP_LOSS_PCT_BULLISH = float(os.getenv('STOP_LOSS_PCT_BULLISH', '0.024'))  # Reduced from 0.038 to 0.024 (2.4%)
-STOP_LOSS_PCT_BEARISH = float(os.getenv('STOP_LOSS_PCT_BEARISH', '0.022'))  # Reduced from 0.034 to 0.022 (2.2%) 
-STOP_LOSS_PCT_SIDEWAYS = float(os.getenv('STOP_LOSS_PCT_SIDEWAYS', '0.018'))  # Reduced from 0.028 to 0.018 (1.8%)
+STOP_LOSS_PCT_BULLISH = float(os.getenv('STOP_LOSS_PCT_BULLISH', '0.015'))  # Reduced from 0.024 to 0.015 (1.5%, 1:4 ratio)
+STOP_LOSS_PCT_BEARISH = float(os.getenv('STOP_LOSS_PCT_BEARISH', '0.010'))  # Reduced from 0.022 to 0.010 (1.0%, 1:4 ratio) 
+STOP_LOSS_PCT_SIDEWAYS = float(os.getenv('STOP_LOSS_PCT_SIDEWAYS', '0.005'))  # Reduced from 0.018 to 0.005 (0.5%, 1:4 ratio)
 
 TAKE_PROFIT_PCT_BULLISH = float(os.getenv('TAKE_PROFIT_PCT_BULLISH', '0.06'))
 TAKE_PROFIT_PCT_BEARISH = float(os.getenv('TAKE_PROFIT_PCT_BEARISH', '0.04'))
 TAKE_PROFIT_PCT_SIDEWAYS = float(os.getenv('TAKE_PROFIT_PCT_SIDEWAYS', '0.02'))
 
-TRAILING_STOP_PCT_BULLISH = float(os.getenv('TRAILING_STOP_PCT_BULLISH', '0.010'))  # Reduced from 0.015 to 0.010 (1.0%)
-TRAILING_STOP_PCT_BEARISH = float(os.getenv('TRAILING_STOP_PCT_BEARISH', '0.008'))  # Reduced from 0.012 to 0.008 (0.8%)
-TRAILING_STOP_PCT_SIDEWAYS = float(os.getenv('TRAILING_STOP_PCT_SIDEWAYS', '0.005'))  # Reduced from 0.008 to 0.005 (0.5%)
+TRAILING_STOP_PCT_BULLISH = float(os.getenv('TRAILING_STOP_PCT_BULLISH', '0.0075'))  # Reduced from 0.010 to 0.0075 (0.75%, 1:4 ratio)
+TRAILING_STOP_PCT_BEARISH = float(os.getenv('TRAILING_STOP_PCT_BEARISH', '0.005'))  # Reduced from 0.008 to 0.005 (0.5%, 1:4 ratio)
+TRAILING_STOP_PCT_SIDEWAYS = float(os.getenv('TRAILING_STOP_PCT_SIDEWAYS', '0.0035'))  # Reduced from 0.005 to 0.0035 (0.35%, 1:4 ratio)
 
 TRAILING_TAKE_PROFIT_PCT_BULLISH = float(os.getenv('TRAILING_TAKE_PROFIT_PCT_BULLISH', '0.03'))
 TRAILING_TAKE_PROFIT_PCT_BEARISH = float(os.getenv('TRAILING_TAKE_PROFIT_PCT_BEARISH', '0.02'))
